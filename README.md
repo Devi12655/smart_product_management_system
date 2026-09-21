@@ -1,334 +1,114 @@
+
 Smart Product Management System
 
-A backend REST API built with Java, Spring Boot, Spring Data JPA, MySQL, Spring Security, and JWT for managing products with role-based access control.
+A backend REST API built with **Java and Spring Boot** for managing products with **JWT authentication** and **role-based authorization**.
+
+The application provides product CRUD operations, search, pagination, image upload, validation, centralized exception handling, and MySQL database integration.
+
+---
+
+## Features
+
+- User registration and login
+- JWT-based authentication
+- Role-based authorization
+- USER and ADMIN roles
+- Product CRUD operations
+- Product search by name, brand, and category
+- Pagination
+- Product image upload and retrieval
+- Image storage in MySQL
+- BCrypt password hashing
+- Bean validation
+- Centralized exception handling
+- MySQL database integration
+
+---
+
+## Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Java | Backend programming |
+| Spring Boot | Application framework |
+| Spring Web | REST APIs |
+| Spring Security | Authentication & authorization |
+| JWT | Token-based authentication |
+| Spring Data JPA | Database access |
+| Hibernate | ORM |
+| MySQL | Database |
+| Lombok | Boilerplate reduction |
+| Maven | Build & dependency management |
+| Postman | API testing |
+
+---
+
+## Architecture
+
+src/main/java/com/devi/project/
+│
+├── controller/
+│   ├── ProductController.java
+│   ├── Registration.java
+│   └── LoginController.java
+│
+├── model/
+│   ├── Product.java
+│   └── User.java
+│
+├── repository/
+│   ├── ProductRepo.java
+│   └── UserRepo.java
+│
+├── service/
+│   └── ProductService.java
+│
+├── exception/
+│   ├── ExceptionManager.java
+│   └── UserAlreadyExit.java
+│
+├── security/
+│   ├── SecurityConfig.java
+│   ├── UserService.java
+│   ├── UserRegister.java
+│   ├── JwtService.java
+│   ├── JwtFilter.java
+│   └── DataSeeder.java
+│
+└── ProjectApplication.java
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint       | Access |
+| ------ | -------------- | ------ |
+| POST   | `/register`    | Public |
+| POST   | `/login`       | Public |
+| GET    | `/api/v1/info` | Public |
+
+### Products
+
+| Method | Endpoint                                | Access       |
+| ------ | --------------------------------------- | ------------ |
+| GET    | `/api/v1/products?page=0&size=10`       | USER / ADMIN |
+| GET    | `/api/v1/product/{id}`                  | USER / ADMIN |
+| GET    | `/api/v1/product/{id}/image`            | USER / ADMIN |
+| GET    | `/api/v1/products/search?keyword=phone` | USER / ADMIN |
+| POST   | `/api/v1/product`                       | ADMIN        |
+| PUT    | `/api/v1/product/{id}`                  | ADMIN        |
+| PATCH  | `/api/v1/product/{id}`                  | ADMIN        |
+| DELETE | `/api/v1/product/{id}`                  | ADMIN        |
+
+---
+
+## Authentication & Authorization
 
-The project demonstrates a layered Spring Boot architecture with product CRUD operations, pagination, search, image upload, validation, centralized exception handling, user registration, JWT authentication, and USER/ADMIN authorization.
+The application uses **JWT-based stateless authentication**.
 
-Features
+### Authentication Flow
 
-Product CRUD operations
-
-Product pagination
-
-Product search by name, brand, and category
-
-Product image upload and retrieval
-
-Image storage using database BLOB
-
-User registration
-
-BCrypt password encryption
-
-JWT-based authentication
-
-Role-based authorization
-
-USER and ADMIN roles
-
-Centralized exception handling
-
-Bean validation
-
-Stateless Spring Security configuration
-
-Automatic admin user seeding
-
-MySQL database integration
-
-Tech Stack
-
-Technology
-
-Purpose
-
-Java
-
-Backend programming
-
-Spring Boot
-
-Application framework
-
-Spring Web
-
-REST APIs
-
-Spring Data JPA
-
-Database access
-
-Hibernate
-
-ORM
-
-MySQL
-
-Relational database
-
-Spring Security
-
-Authentication & authorization
-
-JWT
-
-Token-based authentication
-
-BCrypt
-
-Password hashing
-
-Lombok
-
-Boilerplate reduction
-
-Bean Validation
-
-Request validation
-
-Maven
-
-Dependency management
-
-Project Architecture
-
-Client / Postman
-       |
-       v
-Spring Security
-       |
-       v
-JWT Filter
-       |
-       v
-Controller
-       |
-       v
-Service
-       |
-       v
-Repository
-       |
-       v
-MySQL
-
-The project follows a layered architecture:
-
-Controller
-    ↓
-Service
-    ↓
-Repository
-    ↓
-Database
-
-Security is handled separately through Spring Security and JWT.
-
-Project Structure
-
-src/
-└── main/
-    ├── java/
-    │   └── com/
-    │       └── devi/
-    │           └── project/
-    │               ├── ProjectApplication.java
-    │               │
-    │               ├── controller/
-    │               │   ├── ProductController.java
-    │               │   ├── Registration.java
-    │               │   └── LoginController.java
-    │               │
-    │               ├── model/
-    │               │   ├── Product.java
-    │               │   └── User.java
-    │               │
-    │               ├── repository/
-    │               │   ├── ProductRepo.java
-    │               │   └── UserRepo.java
-    │               │
-    │               ├── service/
-    │               │   └── ProductService.java
-    │               │
-    │               ├── exception/
-    │               │   ├── ExceptionManager.java
-    │               │   └── UserAlreadyExit.java
-    │               │
-    │               └── security/
-    │                   ├── SecurityConfig.java
-    │                   ├── UserService.java
-    │                   ├── UserRegister.java
-    │                   ├── JwtService.java
-    │                   ├── JwtFilter.java
-    │                   └── DataSeeder.java
-    │
-    └── resources/
-        └── application.properties
-
-API Endpoints
-
-Base URL
-
-/api/v1
-
-Public Endpoints
-
-Application Information
-
-GET /api/v1/info
-
-Returns application information.
-
-Register User
-
-POST /register
-
-Example request:
-
-{
-  "username": "john",
-  "password": "password123"
-}
-
-New users are registered with the USER role.
-
-Login
-
-POST /login
-
-Example request:
-
-{
-  "username": "admin",
-  "password": "********"
-}
-
-Successful login returns a JWT token.
-
-Security note: Do not publish real development or production passwords in a public repository. Keep credentials in secure environment configuration.
-
-Product Endpoints
-
-Method
-
-Endpoint
-
-Access
-
-Description
-
-GET
-
-/api/v1/products?page=0&size=10
-
-USER, ADMIN
-
-Get products with pagination
-
-GET
-
-/api/v1/product/{id}
-
-USER, ADMIN
-
-Get product by ID
-
-POST
-
-/api/v1/product
-
-ADMIN
-
-Add a product
-
-GET
-
-/api/v1/product/{id}/image
-
-USER, ADMIN
-
-Get product image
-
-PUT
-
-/api/v1/product/{id}
-
-ADMIN
-
-Update a product
-
-PATCH
-
-/api/v1/product/{id}
-
-ADMIN
-
-Partially update a product
-
-DELETE
-
-/api/v1/product/{id}
-
-ADMIN
-
-Delete a product
-
-GET
-
-/api/v1/products/search?keyword=phone&page=0&size=10
-
-USER, ADMIN
-
-Search products
-
-Add Product
-
-POST /api/v1/product
-
-Accessible by: ADMIN
-
-Uses:
-
-multipart/form-data
-
-The request contains product data and a product image.
-
-Update Product
-
-PUT /api/v1/product/{id}
-
-Updates the product and optionally replaces the image.
-
-Partial Update
-
-PATCH /api/v1/product/{id}
-
-Currently updates:
-
-price
-
-quantity
-
-Search Products
-
-GET /api/v1/products/search?keyword=phone&page=0&size=10
-
-Searches products by:
-
-name
-
-brand
-
-category
-
-Search is case-insensitive.
-
-Authentication & Authorization
-
-This project uses JWT-based stateless authentication.
-
-Authentication Flow
-
+```text
 User
  ↓
 Login
@@ -337,594 +117,214 @@ AuthenticationManager
  ↓
 UserDetailsService
  ↓
-UserRepository
+BCrypt Password Verification
  ↓
-Password verification using BCrypt
+JWT Generated
  ↓
-JWT generated
- ↓
-JWT returned to client
+JWT Returned
+```
 
-For subsequent requests:
+For protected requests:
 
+```text
 Client
  ↓
 Authorization: Bearer <JWT>
  ↓
 JwtFilter
  ↓
-JWT validation
+JWT Validation
  ↓
-Extract username
- ↓
-Load UserDetails
- ↓
-Create Authentication
- ↓
-SecurityContextHolder
- ↓
-Role authorization
+Role Authorization
  ↓
 Controller
+```
 
-Roles & Permissions
+### Role Permissions
 
-Operation
+| Operation          | USER | ADMIN |
+| ------------------ | :--: | :---: |
+| View products      |   ✅  |   ✅   |
+| Search products    |   ✅  |   ✅   |
+| View product image |   ✅  |   ✅   |
+| Add product        |   ❌  |   ✅   |
+| Update product     |   ❌  |   ✅   |
+| Delete product     |   ❌  |   ✅   |
 
-USER
+Use the JWT token in the request header:
 
-ADMIN
+```text
+Authorization: Bearer <your-jwt-token>
+```
 
-View products
+---
 
-✅
+## Database Setup
 
-✅
+The application uses **MySQL**.
 
-Search products
+### 1. Create Database
 
-✅
+```sql
+CREATE DATABASE productdb;
+```
 
-✅
+### 2. Configure Database
 
-View product image
+In `application.properties`:
 
-✅
-
-✅
-
-Add product
-
-❌
-
-✅
-
-Update product
-
-❌
-
-✅
-
-Partial update
-
-❌
-
-✅
-
-Delete product
-
-❌
-
-✅
-
-Password Security
-
-Passwords are never stored as plain text.
-
-During registration:
-
-Plain Password
-      ↓
-BCryptPasswordEncoder
-      ↓
-Encrypted/hashed password
-      ↓
-Database
-
-During login, Spring Security verifies the entered password against the stored BCrypt hash.
-
-Default Admin
-
-The application contains a startup data seeder that creates an admin user if one does not already exist.
-
-The development/demo admin credentials are configured by the application's DataSeeder.
-
-Important: Do not commit real passwords or production credentials to GitHub. Use environment variables or another secure configuration mechanism.
-
-Database Configuration
-
-The application uses MySQL.
-
-Example configuration:
-
+```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/productdb
 spring.datasource.username=root
 spring.datasource.password=${DB_PASSWORD}
-
-Create the database before starting the application:
-
-CREATE DATABASE productdb;
-
-Hibernate is configured to update the database schema:
-
 spring.jpa.hibernate.ddl-auto=update
+```
 
-Environment Variables
+The `${DB_PASSWORD}` value is read from an environment variable.
 
-Sensitive values should be supplied through environment variables.
+### 3. Set Database Password
 
-Example:
+**Windows PowerShell:**
 
-DB_PASSWORD=your_database_password
+```powershell
+$env:DB_PASSWORD="your_mysql_password"
+```
 
-The JWT secret should also be kept outside source control in a production environment.
+**Linux / macOS:**
 
-Running the Project Locally
+```bash
+export DB_PASSWORD=your_mysql_password
+```
 
-Prerequisites
+> Never commit your actual database password or other sensitive information to GitHub.
 
-Install:
+---
 
-Java 17+ (or the Java version configured by the project)
+## Run Locally
 
-Maven
+### Prerequisites
 
-MySQL
+* Java 17+
+* MySQL
+* Maven
+* Git
 
-Git
+### Clone Repository
 
-Check Java:
-
-java -version
-
-Check Maven:
-
-mvn -version
-
-1. Clone the Repository
-
+```bash
 git clone https://github.com/Devi12655/smart_product_management_system.git
+```
 
-Navigate into the project:
-
+```bash
 cd smart_product_management_system
+```
 
-2. Create MySQL Database
+### Start Application
 
-CREATE DATABASE productdb;
+**Windows:**
 
-3. Configure Database Password
-
-Set the environment variable expected by application.properties.
-
-Windows PowerShell:
-
-$env:DB_PASSWORD="your_password"
-
-Linux/macOS:
-
-export DB_PASSWORD=your_password
-
-4. Start the Application
-
-Using Maven:
-
-mvn spring-boot:run
-
-On Windows, using the Maven wrapper:
-
+```powershell
 mvnw.cmd spring-boot:run
+```
 
-Or run the main Spring Boot class:
+**Linux / macOS:**
 
-ProjectApplication.java
+```bash
+./mvnw spring-boot:run
+```
 
-Testing With Postman
+You can also run `ProjectApplication.java` directly from your IDE.
 
-A typical flow is:
+---
 
-1. Register a user
-        ↓
-2. Login
-        ↓
-3. Copy JWT token
-        ↓
-4. Add token to Authorization header
-        ↓
-5. Call protected product APIs
+## Testing
 
-Authorization header:
+The APIs can be tested using **Postman**.
 
-Authorization: Bearer <your-jwt-token>
+Typical testing flow:
 
-For admin operations, use an account that has the ADMIN role.
+```text
+Register
+   ↓
+Login
+   ↓
+Copy JWT Token
+   ↓
+Add Bearer Token
+   ↓
+Test Protected APIs
+```
 
-Product Example
+---
 
-A product contains fields such as:
+## Validation & Exception Handling
 
-{
-  "name": "Galaxy Phone",
-  "description": "Smart phone",
-  "brand": "Samsung",
-  "price": 49999,
-  "category": "Electronics",
-  "releaseDate": "2026-01-15",
-  "quantity": 10
-}
+The project uses **Bean Validation** and centralized exception handling.
 
-Images are handled separately through multipart upload and stored as binary data.
+Examples of validation:
 
-Validation
+* Product price must be positive
+* Product quantity must satisfy the required minimum
 
-Product fields use Bean Validation.
+Exception handling is implemented using:
 
-Examples:
-
-price > 0
-
-quantity >= 1
-
-Invalid requests return:
-
-400 Bad Request
-
-Validation errors are handled centrally through @ControllerAdvice.
-
-Exception Handling
-
-The project uses centralized exception handling with:
-
+```java
 @ControllerAdvice
+```
 
-It handles:
+Common HTTP responses include:
 
-validation errors
+```text
+200 OK
+201 CREATED
+400 BAD REQUEST
+401 UNAUTHORIZED
+403 FORBIDDEN
+404 NOT FOUND
+500 INTERNAL SERVER ERROR
+```
 
-general exceptions
+---
 
-application-specific exceptions
+## Security
 
-Important HTTP responses include:
-
-Status
-
-Meaning
-
-200
-
-OK
-
-201
-
-CREATED
-
-400
-
-BAD REQUEST
-
-401
-
-UNAUTHORIZED
-
-403
-
-FORBIDDEN
-
-404
-
-NOT FOUND
-
-500
-
-INTERNAL SERVER ERROR
-
-401 vs 403
-
-401 Unauthorized
-
-The user is not properly authenticated.
-
-Examples:
-
-No JWT
-
-Invalid JWT
-
-Invalid username/password
-
-403 Forbidden
-
-The user is authenticated but does not have permission.
-
-Example:
-
-USER tries to delete a product
-
-Pagination
-
-Product APIs support pagination.
-
-Example:
-
-GET /api/v1/products?page=0&size=10
-
-Where:
-
-page = page number (zero-based)
-
-size = number of records per page
-
-Spring Data returns a Page<Product> containing the data and pagination metadata.
-
-Search
-
-The search endpoint uses a custom JPQL query.
-
-GET /api/v1/products/search?keyword=phone
-
-The keyword is searched against:
-
-name
-
-brand
-
-category
-
-The query uses LOWER() and LIKE to provide case-insensitive partial matching.
-
-Image Handling
-
-Product images are uploaded using:
-
-multipart/form-data
-
-The project stores:
-
-imageName
-
-imageType
-
-imageData
-
-The image binary is stored in the database using:
-
-@Lob
-private byte[] imageData;
-
-Configured image size:
-
-5 MB
-
-Key Spring Boot Concepts Demonstrated
-
-Spring Boot
-
-@SpringBootApplication
-
-Dependency Injection
-
-Configuration
-
-Application properties
-
-Component scanning
-
-REST API
-
-@RestController
-
-@RequestMapping
-
-@GetMapping
-
-@PostMapping
-
-@PutMapping
-
-@PatchMapping
-
-@DeleteMapping
-
-@PathVariable
-
-@RequestParam
-
-@RequestBody
-
-@RequestPart
-
-ResponseEntity
-
-JPA / Hibernate
-
-@Entity
-
-@Id
-
-@GeneratedValue
-
-@Table
-
-@Column
-
-@Lob
-
-JpaRepository
-
-JPQL
-
-Derived queries
-
-Pagination
-
-Spring Security
-
-SecurityFilterChain
-
-UserDetails
-
-UserDetailsService
-
-AuthenticationManager
-
-PasswordEncoder
-
-BCrypt
-
-SecurityContextHolder
-
-Role-based authorization
-
-Stateless security
-
-JWT
-
-JWT generation
-
-JWT signature
-
-Bearer token
-
-JWT validation
-
-Custom JWT filter
-
-Validation
-
-@Valid
-
-@Positive
-
-@Min
-
-MethodArgumentNotValidException
-
-Exception Handling
-
-@ControllerAdvice
-
-@ExceptionHandler
-
-Custom exceptions
-
-HTTP error responses
-
-Testing
-
-The project contains a Spring Boot application-context test.
-
-Recommended future test coverage:
-
-Controller tests
-
-Service tests
-
-Repository tests
-
-Security tests
-
-JWT tests
-
-Integration tests
-
-Validation tests
-
-Future Enhancements
-
-The current project is suitable as a learning/demo backend. Possible improvements include:
-
-Use DTOs instead of exposing entities directly
-
-Add a global structured error response
-
-Return 409 Conflict for duplicate usernames
-
-Add consistent image-size validation during product creation
-
-Add JWT expiration
-
-Improve JWT error handling
-
-Move JWT secret to secure environment configuration
-
-Move admin credentials to secure configuration
-
-Add unit tests
-
-Add integration tests
-
-Add API documentation with Swagger/OpenAPI
-
-Add logging instead of System.out.println
-
-Add database migrations using Flyway or Liquibase
-
-Store large images in object/file storage instead of the database
-
-Add sorting and advanced filtering
-
-Add refresh tokens if required
-
-Add Docker support
-
-Add CI/CD pipeline
-
-GitHub Security
-
-Before pushing the project, make sure sensitive information is not committed.
+Sensitive information should not be committed to GitHub.
 
 Do not commit:
 
+```text
 .env
-real database passwords
-production JWT secrets
-private credentials
-IDE-specific files
+Database passwords
+JWT secrets
+Private credentials
 target/
+```
 
-A .gitignore should include items such as:
+Sensitive configuration should be provided through environment variables.
 
-target/
-.idea/
-.vscode/
-*.iml
-.env
-*.log
+---
 
-Git Commands
+## Future Enhancements
 
-Initialize Git:
+* DTO implementation
+* Swagger / OpenAPI documentation
+* JWT expiration and refresh tokens
+* Unit and integration testing
+* Advanced filtering and sorting
+* Flyway / Liquibase database migrations
+* Docker support
+* CI/CD pipeline
+* Secure external image storage
 
-git init
+---
 
-Add files:
+## Author
 
-git add .
+**Devi Sri**
 
-Commit:
+GitHub: [https://github.com/Devi12655](https://github.com/Devi12655)
 
-git commit -m "Initial commit"
+```
 
-Add GitHub remote:
-
-git remote add origin https://github.com/Devi12655/smart_product_management_system.git
-
-Push:
-
-git branch -M main
-git push -u origin main
-
-Author
-
-Devi Sri
+This is the version I would use for your GitHub project: **complete enough to explain the project, but not so long that the README becomes cluttered.**
+```
