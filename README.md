@@ -1,7 +1,8 @@
 Smart Product Management System
 
 A backend REST API built with Java, Spring Boot, Spring Data JPA, MySQL, Spring Security, and JWT for managing products with role-based access control.
-The project demonstrates a layered Spring Boot architecture, product CRUD operations, pagination, search, image upload, validation, centralized exception handling, user registration, JWT authentication, and USER/ADMIN authorization.
+
+The project demonstrates a layered Spring Boot architecture with product CRUD operations, pagination, search, image upload, validation, centralized exception handling, user registration, JWT authentication, and USER/ADMIN authorization.
 
 Features
 
@@ -114,11 +115,11 @@ MySQL
 The project follows a layered architecture:
 
 Controller
-   ↓
+    ↓
 Service
-   ↓
+    ↓
 Repository
-   ↓
+    ↓
 Database
 
 Security is handled separately through Spring Security and JWT.
@@ -166,7 +167,7 @@ src/
 
 API Endpoints
 
-Base URL:
+Base URL
 
 /api/v1
 
@@ -199,73 +200,102 @@ Example request:
 
 {
   "username": "admin",
-  "password": "admin123"
+  "password": "********"
 }
 
 Successful login returns a JWT token.
 
+Security note: Do not publish real development or production passwords in a public repository. Keep credentials in secure environment configuration.
+
 Product Endpoints
 
-Get Products
+Method
 
-GET /api/v1/products?page=0&size=10
+Endpoint
 
-Accessible by:
+Access
 
-USER
+Description
+
+GET
+
+/api/v1/products?page=0&size=10
+
+USER, ADMIN
+
+Get products with pagination
+
+GET
+
+/api/v1/product/{id}
+
+USER, ADMIN
+
+Get product by ID
+
+POST
+
+/api/v1/product
+
 ADMIN
 
-Supports pagination.
+Add a product
 
-Get Product By ID
+GET
 
-GET /api/v1/product/{id}
+/api/v1/product/{id}/image
 
-Example:
+USER, ADMIN
 
-GET /api/v1/product/1
+Get product image
 
-Accessible by:
+PUT
 
-USER
+/api/v1/product/{id}
+
 ADMIN
+
+Update a product
+
+PATCH
+
+/api/v1/product/{id}
+
+ADMIN
+
+Partially update a product
+
+DELETE
+
+/api/v1/product/{id}
+
+ADMIN
+
+Delete a product
+
+GET
+
+/api/v1/products/search?keyword=phone&page=0&size=10
+
+USER, ADMIN
+
+Search products
 
 Add Product
 
 POST /api/v1/product
 
-Accessible by:
-
-ADMIN
+Accessible by: ADMIN
 
 Uses:
 
 multipart/form-data
 
-The request contains:
-
-Product data
-
-Product image
-
-Get Product Image
-
-GET /api/v1/product/{id}/image
-
-Accessible by:
-
-USER
-ADMIN
-
-Returns the stored product image.
+The request contains product data and a product image.
 
 Update Product
 
 PUT /api/v1/product/{id}
-
-Accessible by:
-
-ADMIN
 
 Updates the product and optionally replaces the image.
 
@@ -273,22 +303,11 @@ Partial Update
 
 PATCH /api/v1/product/{id}
 
-Accessible by:
-
-ADMIN
-
 Currently updates:
 
 price
+
 quantity
-
-Delete Product
-
-DELETE /api/v1/product/{id}
-
-Accessible by:
-
-ADMIN
 
 Search Products
 
@@ -350,19 +369,58 @@ Controller
 
 Roles & Permissions
 
-| Operation          | USER | ADMIN |
-| ------------------ | :--: | :---: |
-| View products      |   ✅  |   ✅   |
-| Search products    |   ✅  |   ✅   |
-| View product image |   ✅  |   ✅   |
-| Add product        |   ❌  |   ✅   |
-| Update product     |   ❌  |   ✅   |
-| Partial update     |   ❌  |   ✅   |
-| Delete product     |   ❌  |   ✅   |
+Operation
+
+USER
+
+ADMIN
+
+View products
+
+✅
+
+✅
+
+Search products
+
+✅
+
+✅
+
+View product image
+
+✅
+
+✅
+
+Add product
+
+❌
+
+✅
+
+Update product
+
+❌
+
+✅
+
+Partial update
+
+❌
+
+✅
+
+Delete product
+
+❌
+
+✅
 
 Password Security
 
 Passwords are never stored as plain text.
+
 During registration:
 
 Plain Password
@@ -378,17 +436,15 @@ During login, Spring Security verifies the entered password against the stored B
 Default Admin
 
 The application contains a startup data seeder that creates an admin user if one does not already exist.
-Current development credentials:
 
-Username: admin
-Password: admin123
-Role: ADMIN
+The development/demo admin credentials are configured by the application's DataSeeder.
 
-Important: These credentials are for development/demo purposes only. They should be changed or moved to secure environment configuration before deploying the application.
+Important: Do not commit real passwords or production credentials to GitHub. Use environment variables or another secure configuration mechanism.
 
 Database Configuration
 
 The application uses MySQL.
+
 Example configuration:
 
 spring.datasource.url=jdbc:mysql://localhost:3306/productdb
@@ -406,6 +462,7 @@ spring.jpa.hibernate.ddl-auto=update
 Environment Variables
 
 Sensitive values should be supplied through environment variables.
+
 Example:
 
 DB_PASSWORD=your_database_password
@@ -436,11 +493,11 @@ mvn -version
 
 1. Clone the Repository
 
-git clone <your-github-repository-url>
+git clone https://github.com/Devi12655/smart_product_management_system.git
 
 Navigate into the project:
 
-cd <project-folder>
+cd smart_product_management_system
 
 2. Create MySQL Database
 
@@ -449,21 +506,22 @@ CREATE DATABASE productdb;
 3. Configure Database Password
 
 Set the environment variable expected by application.properties.
-Linux/macOS:
-
-export DB_PASSWORD=your_password
 
 Windows PowerShell:
 
 $env:DB_PASSWORD="your_password"
 
+Linux/macOS:
+
+export DB_PASSWORD=your_password
+
 4. Start the Application
 
 Using Maven:
 
-./mvnw spring-boot:run
+mvn spring-boot:run
 
-On Windows:
+On Windows, using the Maven wrapper:
 
 mvnw.cmd spring-boot:run
 
@@ -476,20 +534,20 @@ Testing With Postman
 A typical flow is:
 
 1. Register a user
-       ↓
+        ↓
 2. Login
-       ↓
+        ↓
 3. Copy JWT token
-       ↓
+        ↓
 4. Add token to Authorization header
-       ↓
+        ↓
 5. Call protected product APIs
 
 Authorization header:
 
 Authorization: Bearer <your-jwt-token>
 
-For admin operations, login using the development admin account or another account that has the ADMIN role.
+For admin operations, use an account that has the ADMIN role.
 
 Product Example
 
@@ -510,9 +568,11 @@ Images are handled separately through multipart upload and stored as binary data
 Validation
 
 Product fields use Bean Validation.
+
 Examples:
 
 price > 0
+
 quantity >= 1
 
 Invalid requests return:
@@ -537,28 +597,56 @@ application-specific exceptions
 
 Important HTTP responses include:
 
-200 OK
-201 CREATED
-400 BAD REQUEST
-401 UNAUTHORIZED
-403 FORBIDDEN
-404 NOT FOUND
-500 INTERNAL SERVER ERROR
+Status
+
+Meaning
+
+200
+
+OK
+
+201
+
+CREATED
+
+400
+
+BAD REQUEST
+
+401
+
+UNAUTHORIZED
+
+403
+
+FORBIDDEN
+
+404
+
+NOT FOUND
+
+500
+
+INTERNAL SERVER ERROR
 
 401 vs 403
 
 401 Unauthorized
 
 The user is not properly authenticated.
+
 Examples:
 
 No JWT
+
 Invalid JWT
+
 Invalid username/password
 
 403 Forbidden
 
 The user is authenticated but does not have permission.
+
 Example:
 
 USER tries to delete a product
@@ -566,6 +654,7 @@ USER tries to delete a product
 Pagination
 
 Product APIs support pagination.
+
 Example:
 
 GET /api/v1/products?page=0&size=10
@@ -573,6 +662,7 @@ GET /api/v1/products?page=0&size=10
 Where:
 
 page = page number (zero-based)
+
 size = number of records per page
 
 Spring Data returns a Page<Product> containing the data and pagination metadata.
@@ -586,7 +676,9 @@ GET /api/v1/products/search?keyword=phone
 The keyword is searched against:
 
 name
+
 brand
+
 category
 
 The query uses LOWER() and LIKE to provide case-insensitive partial matching.
@@ -600,7 +692,9 @@ multipart/form-data
 The project stores:
 
 imageName
+
 imageType
+
 imageData
 
 The image binary is stored in the database using:
@@ -613,8 +707,6 @@ Configured image size:
 5 MB
 
 Key Spring Boot Concepts Demonstrated
-
-This project demonstrates:
 
 Spring Boot
 
@@ -728,7 +820,27 @@ Custom exceptions
 
 HTTP error responses
 
-Important Improvements / Future Enhancements
+Testing
+
+The project contains a Spring Boot application-context test.
+
+Recommended future test coverage:
+
+Controller tests
+
+Service tests
+
+Repository tests
+
+Security tests
+
+JWT tests
+
+Integration tests
+
+Validation tests
+
+Future Enhancements
 
 The current project is suitable as a learning/demo backend. Possible improvements include:
 
@@ -768,22 +880,10 @@ Add Docker support
 
 Add CI/CD pipeline
 
-Testing
-
-The project contains a Spring Boot application-context test.
-Recommended future test coverage:
-
-Controller tests
-Service tests
-Repository tests
-Security tests
-JWT tests
-Integration tests
-Validation tests
-
-GitHub Setup
+GitHub Security
 
 Before pushing the project, make sure sensitive information is not committed.
+
 Do not commit:
 
 .env
@@ -818,9 +918,13 @@ git commit -m "Initial commit"
 
 Add GitHub remote:
 
-git remote add origin <your-github-repository-url>
+git remote add origin https://github.com/Devi12655/smart_product_management_system.git
 
 Push:
 
 git branch -M main
 git push -u origin main
+
+Author
+
+Devi Sri
