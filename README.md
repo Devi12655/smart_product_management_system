@@ -1,126 +1,149 @@
+# Smart Product Management System
 
-Smart Product Management System
+A full-stack Product Management System built using **Java, Spring Boot, Spring Security, JWT, Spring Data JPA, MySQL, HTML, CSS, and JavaScript**.
 
-A backend REST API built with **Java and Spring Boot** for managing products with **JWT authentication** and **role-based authorization**.
-
-The application provides product CRUD operations, search, pagination, image upload, validation, centralized exception handling, and MySQL database integration.
-
----
+The application provides secure user authentication, role-based authorization, product management, product search, pagination, and product image upload and retrieval.
 
 ## Features
 
-- User registration and login
-- JWT-based authentication
-- Role-based authorization
-- USER and ADMIN roles
-- Product CRUD operations
-- Product search by name, brand, and category
-- Pagination
-- Product image upload and retrieval
-- Image storage in MySQL
-- BCrypt password hashing
-- Bean validation
-- Centralized exception handling
-- MySQL database integration
-
----
+* User registration and login
+* JWT-based authentication
+* Role-based authorization using `USER` and `ADMIN`
+* Product CRUD operations
+* Product search by name, brand, and category
+* Pagination
+* Product image upload and retrieval
+* Image storage in MySQL as BLOB
+* BCrypt password hashing
+* Input validation
+* Centralized exception handling
+* MySQL database integration
 
 ## Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| Java | Backend programming |
-| Spring Boot | Application framework |
-| Spring Web | REST APIs |
-| Spring Security | Authentication & authorization |
-| JWT | Token-based authentication |
-| Spring Data JPA | Database access |
-| Hibernate | ORM |
-| MySQL | Database |
-| Lombok | Boilerplate reduction |
-| Maven | Build & dependency management |
-| Postman | API testing |
-
----
+| Technology            | Purpose                          |
+| --------------------- | -------------------------------- |
+| Java                  | Backend programming              |
+| Spring Boot           | Application framework            |
+| Spring Web            | REST APIs                        |
+| Spring Security       | Authentication and authorization |
+| JWT                   | Token-based authentication       |
+| Spring Data JPA       | Database access                  |
+| Hibernate             | ORM                              |
+| MySQL                 | Database                         |
+| Lombok                | Boilerplate reduction            |
+| HTML, CSS, JavaScript | Frontend                         |
+| Maven                 | Build and dependency management  |
+| Postman               | API testing                      |
 
 ## Architecture
 
-src/main/java/com/devi/project/
-│
-├── controller/
-│   ├── ProductController.java
-│   ├── Registration.java
-│   └── LoginController.java
-│
-├── model/
-│   ├── Product.java
-│   └── User.java
-│
-├── repository/
-│   ├── ProductRepo.java
-│   └── UserRepo.java
-│
-├── service/
-│   └── ProductService.java
-│
-├── exception/
-│   ├── ExceptionManager.java
-│   └── UserAlreadyExit.java
-│
-├── security/
-│   ├── SecurityConfig.java
-│   ├── UserService.java
-│   ├── UserRegister.java
-│   ├── JwtService.java
-│   ├── JwtFilter.java
-│   └── DataSeeder.java
-│
-└── ProjectApplication.java
+```mermaid
+flowchart TD
+    A["User / Admin"] --> B["Frontend<br/>HTML CSS JavaScript"]
+    B --> C["REST APIs"]
+    C --> D["Spring Security"]
+    D --> E["JWT Filter"]
+    E --> F["JWT Validation"]
+    F --> G["Role Authorization"]
+
+    G --> H{"Request Type"}
+
+    H -->|Register / Login| I["Authentication"]
+    H -->|Product Operations| J["Product Controller"]
+
+    I --> K["User Service"]
+    K --> L["User Repository"]
+    L --> M[("MySQL Database")]
+    I --> N["JWT Token"]
+
+    J --> O["Product Service"]
+    O --> P["Product Repository"]
+    P --> M
+
+    O --> Q["Product CRUD"]
+    O --> R["Search and Pagination"]
+    O --> S["Image Upload / Retrieval"]
+```
+
+The application follows a **layered architecture** using Controller, Service, and Repository layers. Spring Security and JWT handle authentication and role-based authorization.
 
 ## API Endpoints
 
-### Authentication
+### Base URL
 
-| Method | Endpoint       | Access |
-| ------ | -------------- | ------ |
-| POST   | `/register`    | Public |
-| POST   | `/login`       | Public |
-| GET    | `/api/v1/info` | Public |
+```text
+/api/v1
+```
 
-### Products
+### Authentication APIs
 
-| Method | Endpoint                                | Access       |
-| ------ | --------------------------------------- | ------------ |
-| GET    | `/api/v1/products?page=0&size=10`       | USER / ADMIN |
-| GET    | `/api/v1/product/{id}`                  | USER / ADMIN |
-| GET    | `/api/v1/product/{id}/image`            | USER / ADMIN |
-| GET    | `/api/v1/products/search?keyword=phone` | USER / ADMIN |
-| POST   | `/api/v1/product`                       | ADMIN        |
-| PUT    | `/api/v1/product/{id}`                  | ADMIN        |
-| PATCH  | `/api/v1/product/{id}`                  | ADMIN        |
-| DELETE | `/api/v1/product/{id}`                  | ADMIN        |
+| Method | Endpoint       | Access | Description             |
+| ------ | -------------- | ------ | ----------------------- |
+| GET    | `/api/v1/info` | Public | Application information |
+| POST   | `/register`    | Public | Register a new user     |
+| POST   | `/login`       | Public | Login and receive JWT   |
 
----
+### Product APIs
 
-## Authentication & Authorization
+| Method | Endpoint                                               | Access      | Description                  |
+| ------ | ------------------------------------------------------ | ----------- | ---------------------------- |
+| GET    | `/api/v1/products?page=0&size=10`                      | USER, ADMIN | Get products with pagination |
+| GET    | `/api/v1/product/{id}`                                 | USER, ADMIN | Get product by ID            |
+| GET    | `/api/v1/products/search?keyword=phone&page=0&size=10` | USER, ADMIN | Search products              |
+| GET    | `/api/v1/product/{id}/image`                           | USER, ADMIN | Get product image            |
+| POST   | `/api/v1/product`                                      | ADMIN       | Add product                  |
+| PUT    | `/api/v1/product/{id}`                                 | ADMIN       | Update product               |
+| PATCH  | `/api/v1/product/{id}`                                 | ADMIN       | Partially update product     |
+| DELETE | `/api/v1/product/{id}`                                 | ADMIN       | Delete product               |
 
-The application uses **JWT-based stateless authentication**.
+### Product Search
+
+Products can be searched using:
+
+* Name
+* Brand
+* Category
+
+Search supports case-insensitive partial matching.
+
+Example:
+
+```text
+GET /api/v1/products/search?keyword=phone&page=0&size=10
+```
+
+### Image Upload
+
+Product creation and update support:
+
+```text
+multipart/form-data
+```
+
+Product images are stored in MySQL as binary data and can be retrieved through the image endpoint.
+
+## Authentication and Authorization
+
+The application uses **stateless JWT authentication**.
 
 ### Authentication Flow
 
 ```text
 User
- ↓
-Login
- ↓
+  ↓
+Register / Login
+  ↓
 AuthenticationManager
- ↓
-UserDetailsService
- ↓
+  ↓
+UserService
+  ↓
+User Repository
+  ↓
 BCrypt Password Verification
- ↓
+  ↓
 JWT Generated
- ↓
+  ↓
 JWT Returned
 ```
 
@@ -128,19 +151,19 @@ For protected requests:
 
 ```text
 Client
- ↓
+  ↓
 Authorization: Bearer <JWT>
- ↓
+  ↓
 JwtFilter
- ↓
+  ↓
 JWT Validation
- ↓
+  ↓
 Role Authorization
- ↓
+  ↓
 Controller
 ```
 
-### Role Permissions
+### Roles and Permissions
 
 | Operation          | USER | ADMIN |
 | ------------------ | :--: | :---: |
@@ -149,27 +172,22 @@ Controller
 | View product image |   ✅  |   ✅   |
 | Add product        |   ❌  |   ✅   |
 | Update product     |   ❌  |   ✅   |
+| Partial update     |   ❌  |   ✅   |
 | Delete product     |   ❌  |   ✅   |
 
-Use the JWT token in the request header:
-
-```text
-Authorization: Bearer <your-jwt-token>
-```
-
----
+Passwords are stored using **BCrypt hashing** rather than plain text.
 
 ## Database Setup
 
 The application uses **MySQL**.
 
-### 1. Create Database
+### Create Database
 
 ```sql
 CREATE DATABASE productdb;
 ```
 
-### 2. Configure Database
+### Database Configuration
 
 In `application.properties`:
 
@@ -177,12 +195,11 @@ In `application.properties`:
 spring.datasource.url=jdbc:mysql://localhost:3306/productdb
 spring.datasource.username=root
 spring.datasource.password=${DB_PASSWORD}
+
 spring.jpa.hibernate.ddl-auto=update
 ```
 
-The `${DB_PASSWORD}` value is read from an environment variable.
-
-### 3. Set Database Password
+Set the MySQL password using an environment variable.
 
 **Windows PowerShell:**
 
@@ -190,26 +207,22 @@ The `${DB_PASSWORD}` value is read from an environment variable.
 $env:DB_PASSWORD="your_mysql_password"
 ```
 
-**Linux / macOS:**
+**Linux/macOS:**
 
 ```bash
 export DB_PASSWORD=your_mysql_password
 ```
-
-> Never commit your actual database password or other sensitive information to GitHub.
-
----
 
 ## Run Locally
 
 ### Prerequisites
 
 * Java 17+
-* MySQL
 * Maven
+* MySQL
 * Git
 
-### Clone Repository
+### Clone the Repository
 
 ```bash
 git clone https://github.com/Devi12655/smart_product_management_system.git
@@ -219,29 +232,25 @@ git clone https://github.com/Devi12655/smart_product_management_system.git
 cd smart_product_management_system
 ```
 
-### Start Application
+### Start the Application
 
 **Windows:**
 
-```powershell
+```bash
 mvnw.cmd spring-boot:run
 ```
 
-**Linux / macOS:**
+**Linux/macOS:**
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-You can also run `ProjectApplication.java` directly from your IDE.
+Or run `ProjectApplication.java` from your IDE.
 
----
+## Testing with Postman
 
-## Testing
-
-The APIs can be tested using **Postman**.
-
-Typical testing flow:
+Recommended testing flow:
 
 ```text
 Register
@@ -250,41 +259,33 @@ Login
    ↓
 Copy JWT Token
    ↓
-Add Bearer Token
+Authorization → Bearer Token
    ↓
-Test Protected APIs
+Call Protected Product APIs
 ```
 
----
+Authorization header:
 
-## Validation & Exception Handling
+```text
+Authorization: Bearer <your-jwt-token>
+```
 
-The project uses **Bean Validation** and centralized exception handling.
+## Validation and Exception Handling
 
-Examples of validation:
+The project uses Bean Validation for product inputs.
 
-* Product price must be positive
-* Product quantity must satisfy the required minimum
+Examples:
 
-Exception handling is implemented using:
+```text
+price > 0
+quantity >= 1
+```
+
+Validation and application-specific exceptions are handled centrally using:
 
 ```java
 @ControllerAdvice
 ```
-
-Common HTTP responses include:
-
-```text
-200 OK
-201 CREATED
-400 BAD REQUEST
-401 UNAUTHORIZED
-403 FORBIDDEN
-404 NOT FOUND
-500 INTERNAL SERVER ERROR
-```
-
----
 
 ## Security
 
@@ -294,27 +295,12 @@ Do not commit:
 
 ```text
 .env
-Database passwords
+database passwords
 JWT secrets
-Private credentials
+private credentials
 target/
+.vscode/
 ```
 
 Sensitive configuration should be provided through environment variables.
-
----
-
-## Future Enhancements
-
-* DTO implementation
-* Swagger / OpenAPI documentation
-* JWT expiration and refresh tokens
-* Unit and integration testing
-* Advanced filtering and sorting
-* Flyway / Liquibase database migrations
-* Docker support
-* CI/CD pipeline
-* Secure external image storage
-
----
 
