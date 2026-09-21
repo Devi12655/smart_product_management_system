@@ -36,35 +36,46 @@ The application provides secure user authentication, role-based authorization, p
 | Maven                 | Build and dependency management  |
 | Postman               | API testing                      |
 
-2. Project folder map
+## Architecture
 
-src/main/java/com/devi/project/
-├── ProjectApplication.java
-├── controller/
-│   ├── ProductController.java
-│   ├── Registration.java
-│   └── LoginController.java
-├── model/
-│   ├── Product.java
-│   └── User.java
-├── repository/
-│   ├── ProductRepo.java
-│   └── UserRepo.java
-├── service/
-│   └── ProductService.java
-├── exception/
-│   ├── ExceptionManager.java
-│   └── UserAlreadyExit.java
-└── security/
-    ├── SecurityConfig.java
-    ├── UserService.java
-    ├── UserRegister.java
-    ├── DataSeeder.java
-    ├── JwtService.java
-    └── JwtFilter.java
+```mermaid
+flowchart TD
 
-src/main/resources/
-└── application.properties
+    A["User / Admin"] --> B["Postman / Client"]
+
+    B --> C["Register"]
+    B --> D["Login"]
+    B --> E["Protected Product APIs"]
+
+    C --> F["Registration Controller"]
+    F --> G["UserRegister"]
+    G --> H["BCrypt Password Hashing"]
+    H --> I["User Repository"]
+    I --> J[("MySQL")]
+
+    D --> K["AuthenticationManager"]
+    K --> L["UserService"]
+    L --> I
+    K --> M["JWT Token"]
+
+    E --> N["Spring Security"]
+    N --> O["JwtFilter"]
+    O --> P["JWT Validation"]
+    P --> L
+    L --> Q["Load User + Roles"]
+    Q --> R["SecurityContext"]
+    R --> S["Role Authorization"]
+
+    S -->|USER / ADMIN| T["Product Controller"]
+    S -->|Unauthorized| U["403 Forbidden"]
+
+    T --> V["Product Service"]
+    V --> W["Product Repository"]
+    W --> J
+
+    V --> X["CRUD"]
+    V --> Y["Search & Pagination"]
+    V --> Z["Image Upload / Retrieval"]
 The application follows a **layered architecture** using Controller, Service, and Repository layers. Spring Security and JWT handle authentication and role-based authorization.
 
 ## API Endpoints
