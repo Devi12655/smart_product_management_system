@@ -318,13 +318,3 @@ Sensitive configuration should be provided through environment variables.
 
 ---
 
-## Author
-
-**Devi Sri**
-
-GitHub: [https://github.com/Devi12655](https://github.com/Devi12655)
-
-```
-
-This is the version I would use for your GitHub project: **complete enough to explain the project, but not so long that the README becomes cluttered.**
-```
