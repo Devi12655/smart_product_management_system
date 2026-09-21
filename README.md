@@ -35,7 +35,7 @@ The application provides secure user authentication, role-based authorization, p
 | HTML, CSS, JavaScript | Frontend                         |
 | Maven                 | Build and dependency management  |
 | Postman               | API testing                      |
-
+System Architecture
 <img width="2415" height="2929" alt="mermaid-diagram" src="https://github.com/user-attachments/assets/9eab601a-8ec5-4430-a5d1-0613e81dfa4d" />
 
 The application follows a **layered architecture** using Controller, Service, and Repository layers. Spring Security and JWT handle authentication and role-based authorization.
