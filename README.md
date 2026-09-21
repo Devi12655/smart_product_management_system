@@ -36,36 +36,35 @@ The application provides secure user authentication, role-based authorization, p
 | Maven                 | Build and dependency management  |
 | Postman               | API testing                      |
 
-## Architecture
+2. Project folder map
 
-```mermaid
-flowchart TD
-    A["User / Admin"] --> B["Frontend<br/>HTML CSS JavaScript"]
-    B --> C["REST APIs"]
-    C --> D["Spring Security"]
-    D --> E["JWT Filter"]
-    E --> F["JWT Validation"]
-    F --> G["Role Authorization"]
+src/main/java/com/devi/project/
+├── ProjectApplication.java
+├── controller/
+│   ├── ProductController.java
+│   ├── Registration.java
+│   └── LoginController.java
+├── model/
+│   ├── Product.java
+│   └── User.java
+├── repository/
+│   ├── ProductRepo.java
+│   └── UserRepo.java
+├── service/
+│   └── ProductService.java
+├── exception/
+│   ├── ExceptionManager.java
+│   └── UserAlreadyExit.java
+└── security/
+    ├── SecurityConfig.java
+    ├── UserService.java
+    ├── UserRegister.java
+    ├── DataSeeder.java
+    ├── JwtService.java
+    └── JwtFilter.java
 
-    G --> H{"Request Type"}
-
-    H -->|Register / Login| I["Authentication"]
-    H -->|Product Operations| J["Product Controller"]
-
-    I --> K["User Service"]
-    K --> L["User Repository"]
-    L --> M[("MySQL Database")]
-    I --> N["JWT Token"]
-
-    J --> O["Product Service"]
-    O --> P["Product Repository"]
-    P --> M
-
-    O --> Q["Product CRUD"]
-    O --> R["Search and Pagination"]
-    O --> S["Image Upload / Retrieval"]
-```
-
+src/main/resources/
+└── application.properties
 The application follows a **layered architecture** using Controller, Service, and Repository layers. Spring Security and JWT handle authentication and role-based authorization.
 
 ## API Endpoints
